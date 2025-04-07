@@ -49,10 +49,11 @@ jobs:
           sam deploy \
             --template-file .aws-sam/build/template.yaml \
             --stack-name s3-sns-notifier-${{ matrix.environment }} \
+            --s3-bucket cf-templates-ovs2ebf4lrjy-eu-west-1 \
+            --region eu-west-1 \
             --parameter-overrides \
               EnvironmentName=${{ matrix.environment }} \
               NotificationEmail=${{ secrets.NOTIFICATION_EMAIL }} \
             --capabilities CAPABILITY_IAM \
             --no-confirm-changeset \
             --no-fail-on-empty-changeset \
-            --resolve-s3 

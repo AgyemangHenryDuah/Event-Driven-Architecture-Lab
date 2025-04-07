@@ -1,41 +1,57 @@
-name: SAM Deploy App
+name: SAM Deploy Node.js
 
 on:
   push:
     branches:
       - main
-jobs:
-    deploy:
-        runs-on: ubuntu-latest
-        strategy:
-            matrix:
-                environment: [dev, prod]
-        steps:
-            - uses: actions/checkout@v3
+      - dev
 
-            - uses: actions/setup-node@v3
-              with:
-                node-version: '18'
-                cache: 'npm'
-            
-            - name: Configure AWS credentials
-              uses: aws-actions/configure-aws-credentials@v3
-              with:
-                aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-                aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-                aws-region: eu-west-1
-            - name: Install SAM CLI
-              run: pip install aws-sam-cli
-            - name: Install dependencies
-              run: npm install
-              working-directory: ./src
-            - name: Build SAM application
-              run: |
-                sam deploy \
-                --template-file Template.json \
-                --stack-name s3-sns-notifier-${{ matrix.environment }} \
-                --parameter-overrides \
-                Environment=${{ matrix.environment }} \
-                NotoficationEmail=${{ env.NOTIFICATION_EMAIL }} \
-                --capabilities CAPABILITY_IAM \
-                --no-confirm-changeset
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        environment: ['dev', 'prod']
+    
+    steps:
+      - uses: actions/checkout@v3
+      
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          cache: 'npm'  # Add npm caching
+      
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+      
+      - name: Install SAM CLI
+        run: pip install aws-sam-cli
+      
+      - name: Install Node.js dependencies
+        run: |
+          cd src
+          npm install
+          npm install aws-sdk  # Ensure AWS SDK is installed
+      
+      - name: Generate package-lock.json
+        run: |
+          cd src
+          npm install --package-lock-only  # Create lock file if missing
+      
+      - name: Build SAM application
+        run: sam build
+      
+      - name: Deploy SAM application
+        run: |
+          sam deploy \
+            --template-file template.json \
+            --stack-name s3-sns-notifier-${{ matrix.environment }} \
+            --parameter-overrides \
+              EnvironmentName=${{ matrix.environment }} \
+              NotificationEmail=${{ secrets.NOTIFICATION_EMAIL }} \
+            --capabilities CAPABILITY_IAM \
+            --no-confirm-changeset

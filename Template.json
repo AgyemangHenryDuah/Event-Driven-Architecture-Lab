@@ -65,7 +65,7 @@
             "Type": "AWS::Serverless::Function",
             "Properties": {
                 "FunctionName": {
-                    "Fn::Sub": "s3-upload-notifier"
+                    "Fn::Sub": "s3-upload-notifier-${EnvironmentName}"
                 },
                 "CodeUri": "src/",
                 "Handler": "app.handler",

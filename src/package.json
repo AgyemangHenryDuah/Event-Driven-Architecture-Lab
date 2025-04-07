@@ -2,8 +2,11 @@
     "name": "s3-upload-notifier",
     "version": "1.0.0",
     "description": "S3 upload notification handler",
-    "main": "app.js",
+    "main": "src/app.js",
     "dependencies": {
-        "aws-sdk": "^2.1235.0"
+        "aws-sdk": "^2.1495.0"
+    },
+    "engines": {
+        "node": ">=18.x"
     }
 }

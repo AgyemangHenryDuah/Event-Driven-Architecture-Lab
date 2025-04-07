@@ -8,6 +8,7 @@ on:
 
 jobs:
   deploy:
+    timeout-minutes: 15
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -16,36 +17,32 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       
-      - uses: actions/setup-node@v3
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
         with:
           node-version: '18'
+          cache: 'npm'
       
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v2
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-east-1
+          aws-region: eu-west-1
       
       - name: Install SAM CLI
-        run: pip install aws-sam-cli
-
-
-      - name: Generate package-lock.json
-        run: |
-          cd src
-          npm install --package-lock-only
+        run: pip install --quiet aws-sam-cli
       
-      - name: Install Node.js dependencies
+      - name: Install dependencies
         run: |
-          cd src
-          npm install
-          npm install aws-sdk
+          npm install --no-fund --no-audit --quiet
+          npm cache clean --force
       
       - name: Build SAM application
-        run: sam build
+        run: sam build --quiet
       
       - name: Deploy SAM application
+        timeout-minutes: 10
         run: |
           sam deploy \
             --template-file template.json \
@@ -54,4 +51,5 @@ jobs:
               EnvironmentName=${{ matrix.environment }} \
               NotificationEmail=${{ secrets.NOTIFICATION_EMAIL }} \
             --capabilities CAPABILITY_IAM \
-            --no-confirm-changeset
+            --no-confirm-changeset \
+            --no-fail-on-empty-changeset

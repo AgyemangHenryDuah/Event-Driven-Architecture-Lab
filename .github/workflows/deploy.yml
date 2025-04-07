@@ -30,7 +30,6 @@ jobs:
       - name: Install SAM CLI
         run: pip install aws-sam-cli
 
-
       - name: Generate package-lock.json
         run: |
           cd src
@@ -43,15 +42,16 @@ jobs:
           npm install aws-sdk
       
       - name: Build SAM application
-        run: sam build
+        run: sam build --template-file Template.json
       
       - name: Deploy SAM application
         run: |
           sam deploy \
-            --template-file Template.json \
+            --template-file .aws-sam/build/template.yaml \
             --stack-name s3-sns-notifier-${{ matrix.environment }} \
             --parameter-overrides \
               EnvironmentName=${{ matrix.environment }} \
               NotificationEmail=${{ secrets.NOTIFICATION_EMAIL }} \
             --capabilities CAPABILITY_IAM \
-            --no-confirm-changeset
+            --no-confirm-changeset \
+            --no-fail-on-empty-changeset

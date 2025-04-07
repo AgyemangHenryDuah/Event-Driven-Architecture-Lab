@@ -36,6 +36,6 @@ jobs:
                 --stack-name s3-sns-notifier-${{ matrix.environment }} \
                 --parameter-overrides \
                 Environment=${{ matrix.environment }} \
-                NotoficationEmail=${{ secrets.NOTIFICATION_EMAIL }} \
+                NotoficationEmail=${{ env.NOTIFICATION_EMAIL }} \
                 --capabilities CAPABILITY_IAM \
                 --no-confirm-changeset

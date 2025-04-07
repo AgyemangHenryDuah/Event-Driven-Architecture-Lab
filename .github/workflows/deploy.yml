@@ -54,4 +54,5 @@ jobs:
               NotificationEmail=${{ secrets.NOTIFICATION_EMAIL }} \
             --capabilities CAPABILITY_IAM \
             --no-confirm-changeset \
-            --no-fail-on-empty-changeset
+            --no-fail-on-empty-changeset \
+            --resolve-s3 

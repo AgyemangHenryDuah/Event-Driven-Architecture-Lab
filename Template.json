@@ -50,7 +50,7 @@
             }
         },
         "NotoficationSubscription": {
-            "Type": "AWS::SNS:Subscription",
+            "Type": "AWS::SNS::Subscription",
             "Properties": {
                 "Protocol": "email",
                 "Endpoint": {

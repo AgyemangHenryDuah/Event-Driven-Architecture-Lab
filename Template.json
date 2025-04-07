@@ -31,7 +31,10 @@
                         {
                             "Event": "s3:ObjectCreated:*",
                             "Function": {
-                                "Fn::GetAtt": ["NotificationFunction", "Arn"]
+                                "Fn::GetAtt": [
+                                    "NotificationFunction",
+                                    "Arn"
+                                ]
                             }
                         }
                     ]
@@ -61,8 +64,8 @@
         "NotificationFunction": {
             "Type": "AWS::Serverless::Function",
             "Properties": {
-                "FucntionName": {
-                    "Fn::Sub": "s3-upload-notifier-${EnvironmentName}"
+                "FunctionName": {
+                    "Fn::Sub": "s3-upload-notifier"
                 },
                 "CodeUri": "src/",
                 "Handler": "app.handler",
@@ -77,7 +80,10 @@
                     {
                         "SNSPublishMessagePolicy": {
                             "TopicName": {
-                                "Fn::GetAtt": ["NotificationTopic", "TopicName"]
+                                "Fn::GetAtt": [
+                                    "NotificationTopic",
+                                    "TopicName"
+                                ]
                             }
                         }
                     }
@@ -89,7 +95,9 @@
                             "Bucket": {
                                 "Ref": "UploadBucket"
                             },
-                            "Events": ["s3:ObjectCreated:*"]
+                            "Events": [
+                                "s3:ObjectCreated:*"
+                            ]
                         }
                     }
                 }
@@ -112,7 +120,10 @@
         "NotificationFunctionArn": {
             "Description": "Lambda function ARN for notifications",
             "Value": {
-                "Fn::GetAtt": ["NotificationFunction", "Arn"]
+                "Fn::GetAtt": [
+                    "NotificationFunction",
+                    "Arn"
+                ]
             }
         }
     }

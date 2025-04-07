@@ -46,7 +46,6 @@ jobs:
       
       - name: Deploy SAM application
         run: |
-          aws s3 mb s3://sam-deployments-eu-west-1-${{ github.run_id }} --region eu-west-1
           sam deploy \
             --template-file .aws-sam/build/template.yaml \
             --stack-name s3-sns-notifier-${{ matrix.environment }} \
@@ -56,5 +55,4 @@ jobs:
             --capabilities CAPABILITY_IAM \
             --no-confirm-changeset \
             --no-fail-on-empty-changeset \
-            --region eu-west-1 \
-            --s3-bucket sam-deployments-eu-west-1-${{ github.run_id }} \
+            --resolve-s3 

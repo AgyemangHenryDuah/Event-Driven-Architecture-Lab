@@ -19,7 +19,6 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: '18'
-          cache: 'npm'  # Add npm caching
       
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v2
@@ -30,17 +29,18 @@ jobs:
       
       - name: Install SAM CLI
         run: pip install aws-sam-cli
+
+
+      - name: Generate package-lock.json
+        run: |
+          cd src
+          npm install --package-lock-only
       
       - name: Install Node.js dependencies
         run: |
           cd src
           npm install
-          npm install aws-sdk  # Ensure AWS SDK is installed
-      
-      - name: Generate package-lock.json
-        run: |
-          cd src
-          npm install --package-lock-only  # Create lock file if missing
+          npm install aws-sdk
       
       - name: Build SAM application
         run: sam build

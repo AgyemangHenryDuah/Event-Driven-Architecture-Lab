@@ -31,10 +31,7 @@
                         {
                             "Event": "s3:ObjectCreated:*",
                             "Function": {
-                                "Fn::GetAtt": [
-                                    "NotificationFunction",
-                                    "Arn"
-                                ]
+                                "Fn::GetAtt": ["NotificationFunction", "Arn"]
                             }
                         }
                     ]
@@ -80,10 +77,7 @@
                     {
                         "SNSPublishMessagePolicy": {
                             "TopicName": {
-                                "Fn::GetAtt": [
-                                    "NotificationTopic",
-                                    "TopicName"
-                                ]
+                                "Fn::GetAtt": ["NotificationTopic", "TopicName"]
                             }
                         }
                     }
@@ -95,9 +89,7 @@
                             "Bucket": {
                                 "Ref": "UploadBucket"
                             },
-                            "Events": [
-                                "s3:ObjectCreated:*"
-                            ]
+                            "Events": ["s3:ObjectCreated:*"]
                         }
                     }
                 }
@@ -120,10 +112,7 @@
         "NotificationFunctionArn": {
             "Description": "Lambda function ARN for notifications",
             "Value": {
-                "Fn::GetAtt": [
-                    "NotificationFunction",
-                    "Arn"
-                ]
+                "Fn::GetAtt": ["NotificationFunction", "Arn"]
             }
         }
     }

@@ -1,0 +1,5 @@
+template-file-path: Template.json
+parameters:
+  NotificationEmail: amglna2020@gmail.com
+  EnvironmentName: prod
+tags: {}
